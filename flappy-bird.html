@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            height: 96vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #drawboard {
+            margin-top: 80px;
+            height: 600px;
+            width: 400px;
+            background-image: url(static/flappybg.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bird {
+            background-image: url(static/flappypng.png);
+            height: 50px;
+            width: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            position: absolute;
+            top: 50px; 
+            left: 50px;
+            z-index: 100;
+        }
+
+        .pipeup {
+            display: block;
+            position: absolute;
+            background-color: greenyellow;
+            width: 25px;
+            overflow: hidden;
+            top: 0px;
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+        .pipedown{
+            display: block;
+            position: absolute;
+            background-color: greenyellow;
+            width: 25px;
+            overflow: hidden;
+            bottom: 0px;
+            border-radius: 10px 10px 0 0;
+            z-index: 1;
+        }
+        .contents{
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            z-index: 100;
+        }
+        h3{
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Flappy Bird</h1>
+        <p>Avoid Hitting the pipes using spacebar</p>
+        <a href="index.html">Return Home?</a>
+    </header>
+    <div id="drawboard">
+        <div class="contents">
+            <h1>Flappy Bird</h1>
+            <h3 id="message">Score : 0</h3>
+            <div class="bird" id="bird"></div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Game Hub. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+    let bird = document.getElementById("bird");
+    let drawboard = document.querySelector('#drawboard');
+    let gravity = 10 ;
+    let birdTop = 50;
+    let flappower = -50;
+    let pipepos = 450;
+    let pipemove = 5;
+    let pipes = [];
+    let gameover = false; 
+    let score = 0;
+
+    function fall() {
+        birdTop += gravity;
+        if (birdTop > drawboard.offsetHeight - bird.offsetHeight) {
+            birdTop = drawboard.offsetHeight - bird.offsetHeight;
+            gameover = true;
+        }
+        bird.style.top = birdTop + 'px';
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === " " || event.key === "Spacebar") {
+            birdTop += flappower;
+            if (birdTop < 0) birdTop = 0;
+        }
+    });
+
+    function createPipe() {
+        totalheight = 600;
+        pipeheighttop = Math.floor(Math.random() * 500);
+        pipeheightbottom = totalheight - (pipeheighttop+100)
+
+        pipeup = document.createElement('div');
+        pipeup.classList.add('pipeup');
+        pipeup.style.height = pipeheighttop +'px';
+        pipeup.style.left = "440px";
+        drawboard.appendChild(pipeup)
+        
+        pipedown = document.createElement('div');
+        pipedown.classList.add('pipedown');
+        pipedown.style.height = pipeheightbottom + 'px';
+        pipedown.style.left = "440px";
+        drawboard.appendChild(pipedown)
+    }
+
+    function movePipes() {
+        let pipeups = document.getElementsByClassName('pipeup');
+        let pipedowns = document.getElementsByClassName('pipedown');
+        for (let i = 0; i < pipeups.length; i++) {
+            let pipeup = pipeups[i];
+            let pipedown = pipedowns[i];
+            pipeup.style.left = (parseInt(pipeup.style.left) - pipemove) + 'px';
+            pipedown.style.left = (parseInt(pipedown.style.left) - pipemove) + 'px';
+            if (parseInt(pipeup.style.left) + pipeup.offsetWidth <= 0) {
+                pipeup.remove(); 
+                pipedown.remove();
+            }
+        }
+    }
+
+    function checkForScoring() {
+        iscounted = false;
+        scoreElement = document.getElementById('message');
+        let firstPipeUp = document.getElementsByClassName('pipeup')[0];
+        if (parseInt(firstPipeUp.style.left) + pipeup.offsetWidth <= bird.offsetLeft  && iscounted ==false) {
+            score++;
+            scoreElement.innerText = 'Score: ' + score;
+            iscounted=true;
+        }
+    }
+
+    function checkcollision() {
+        let firstPipeUp = document.getElementsByClassName('pipeup')[0];
+        let firstPipeDown = document.getElementsByClassName('pipedown')[0];
+        // Bird's position and size
+        let birdLeft = bird.offsetLeft;
+        let birdRight = bird.offsetLeft + bird.offsetWidth;
+        let birdTop = parseInt(bird.style.top);
+        let birdBottom = birdTop + bird.offsetHeight;
+        // Pipe's position and size
+        let pipeUpLeft = parseInt(firstPipeUp.style.left);
+        let pipeUpRight = pipeUpLeft + firstPipeUp.offsetWidth;
+        let pipeUpBottom = parseInt(firstPipeUp.style.height);  // Height of the top pipe
+        let pipeDownLeft = parseInt(firstPipeDown.style.left);
+        let pipeDownRight = pipeDownLeft + firstPipeDown.offsetWidth;
+        let pipeDownTop = parseInt(firstPipeDown.style.top);  // Top of the bottom pipe
+        // Check for collision with the upper pipe (top pipe)
+        if (birdRight > pipeUpLeft && birdLeft < pipeUpRight) {
+            if (birdTop < pipeUpBottom) {
+                console.log("Game Over - Bird hit upper pipe");
+                gameover = true;
+            }
+        }
+        // Check for collision with the lower pipe (bottom pipe)
+        if (birdRight > pipeDownLeft && birdLeft < pipeDownRight) {
+            if (birdBottom > pipeDownTop) {  // Bird's bottom should be greater than the top of the bottom pipe
+                console.log("Game Over - Bird hit lower pipe");
+                gameover = true;
+            }
+        }
+    }
+
+    function gameLoop() {
+        fall();
+        movePipes();
+    }
+
+    gameover=true; 
+    if(!gameover){
+        setInterval(gameLoop, 100);
+        setInterval(createPipe, 5000);
+        setTimeout(()=>{
+            setInterval(checkForScoring, 1000);
+        },5000);
+        setTimeout(() => {
+            setInterval(checkcollision, 1000);
+        }, 5000);
+    }
+</script>
+</html>
