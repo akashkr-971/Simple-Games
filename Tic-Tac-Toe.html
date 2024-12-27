@@ -6,7 +6,27 @@
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        
+        body{
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input{
+            height: 45px;
+            width: 45px;
+            border:3px solid black;
+            font-size: 24px;
+            text-align: center;
+        }
+        .inputs{
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+        h3{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -15,8 +35,113 @@
         <p>Get 3 X or O in a row or column or diagonally</p>
         <a href="index.html">Return Home?</a>
     </header>
+    <div id="drawboard">
+        <h1>Tic-Tac-Toe</h1>
+        <h3 id="message"></h3>
+        <div class="inputs">
+            <div>
+                <input type="text" maxlength="1" id="row1col1">
+                <input type="text" maxlength="1" id="row1col2">
+                <input type="text" maxlength="1" id="row1col3">
+            </div>
+            <div>
+                <input type="text" maxlength="1" id="row2col1">
+                <input type="text" maxlength="1" id="row2col2">
+                <input type="text" maxlength="1" id="row2col3">
+            </div>
+            <div>
+                <input type="text" maxlength="1" id="row3col1">
+                <input type="text" maxlength="1" id="row3col2">
+                <input type="text" maxlength="1" id="row3col3">
+            </div>
+        </div>
+    </div>
     <footer>
         <p>&copy; 2024 Game Hub. All rights reserved.</p>
     </footer>
 </body>
+<script>
+    const allinput = document.querySelectorAll('input');
+    const disableinput = () => {
+        allinput.forEach(input => {
+            input.readOnly = true;
+        });
+    }
+    document.addEventListener("keydown", function (event) {
+        const allowedKeys = ["x", "X", "o", "O", "Backspace", "Enter", "Shift", "CapsLock", "Tab", "Control", "Alt"];
+        if (!allowedKeys.includes(event.key)){
+            alert("Please enter X or O");
+            event.preventDefault();
+        }
+    });
+    allinput.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.value !== '' && (input.value.toUpperCase() === 'X' || input.value.toUpperCase() === 'O')) {
+                    input.readOnly = true;
+                } else {
+                    input.value = '';
+                }
+            });
+        });
+
+    document.addEventListener("input",function(){
+        cell1 = document.getElementById("row1col1").value.toUpperCase();
+        cell2 = document.getElementById("row1col2").value.toUpperCase();
+        cell3 = document.getElementById("row1col3").value.toUpperCase();
+        cell4 = document.getElementById("row2col1").value.toUpperCase();
+        cell5 = document.getElementById("row2col2").value.toUpperCase();
+        cell6 = document.getElementById("row2col3").value.toUpperCase();
+        cell7 = document.getElementById("row3col1").value.toUpperCase();
+        cell8 = document.getElementById("row3col2").value.toUpperCase();
+        cell9 = document.getElementById("row3col3").value.toUpperCase();
+        message = document.getElementById("message");
+         if (
+            (cell1 === "X" && cell2 === "X" && cell3 === "X") ||
+            (cell4 === "X" && cell5 === "X" && cell6 === "X") ||
+            (cell7 === "X" && cell8 === "X" && cell9 === "X") ||
+            (cell1 === "X" && cell5 === "X" && cell9 === "X") ||
+            (cell3 === "X" && cell5 === "X" && cell7 === "X") ||
+            (cell1 === "X" && cell4 === "X" && cell7 === "X") ||
+            (cell2 === "X" && cell5 === "X" && cell8 === "X") ||
+            (cell3 === "X" && cell6 === "X" && cell9 === "X")
+        ){
+            message.innerHTML = "X Won<br><a href='Tic-Tac-Toe.html'>Start Again</a>";
+            disableinput(); 
+            throwconfette();
+        }
+        else if (
+            (cell1 === "O" && cell2 === "O" && cell3 === "O") ||
+            (cell4 === "O" && cell5 === "O" && cell6 === "O") ||
+            (cell7 === "O" && cell8 === "O" && cell9 === "O") ||
+            (cell1 === "O" && cell5 === "O" && cell9 === "O") ||
+            (cell3 === "O" && cell5 === "O" && cell7 === "O") ||
+            (cell1 === "O" && cell4 === "O" && cell7 === "O") ||
+            (cell2 === "O" && cell5 === "O" && cell8 === "O") ||
+            (cell3 === "O" && cell6 === "O" && cell9 === "O")
+        ){
+            message.innerHTML = "O Won<br><a href='Tic-Tac-Toe.html'>Start Again</a>";
+            disableinput();
+            throwconfette();
+        }
+        else if(cell1 && cell2 && cell3 && cell4 && cell5 && cell6 && cell7 && cell8 && cell9){
+            message.innerHTML = "Its a Tie<br><a href='Tic-Tac-Toe.html'>Start Again</a>";
+            disableinput();
+        }
+    });
+    function throwconfette() {
+        for (i = 0; i < 200; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.top = '-10px';
+            confetti.style.left = Math.random() * window.innerWidth - 10 + 'px';
+            confetti.style.animationDelay = Math.random() * 5 + 's';
+            const colors = ['#ff0', '#ff6347', '#32cd32', '#1e90ff', '#ff1493'];
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(confetti);
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+</script>
 </html>
