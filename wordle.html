@@ -4,36 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body{
-            height: 98vh;
-            width: 99%;
+        body {
+            height: 95vh;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             text-align: center;
-            background: linear-gradient(120deg,rgba(0, 243, 0, 0.8),rgb(0, 0, 255, 0.8));
-        }
-        header {
-            display: flex;
-            position: absolute;
-            flex-direction: column;
-            width: 100%;
-            top: 0;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            font-size: 18px;
+            background: linear-gradient(120deg, rgba(0, 243, 0, 0.8), rgb(0, 0, 255, 0.8));
         }
         input{
             height: 30px;
@@ -86,20 +67,6 @@
 
         button:hover {
             background: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-            margin-top: 40px;
-            position: absolute;
-            bottom: 0;
-            width: 98%;
-        }
-        a{
-            text-decoration: none;
-            color: white;
         }
         @keyframes fall {
             0% {
