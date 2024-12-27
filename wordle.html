@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <style>
+        body{
+            height: 98vh;
+            width: 99%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg,rgba(0, 243, 0, 0.8),rgb(0, 0, 255, 0.8));
+        }
+        header {
+            display: flex;
+            position: absolute;
+            flex-direction: column;
+            width: 100%;
+            top: 0;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+        }
+        input{
+            height: 30px;
+            width: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        input:last-child{
+            margin-right: 0px !important;
+        }
+        .styledinput{
+            display: flex;
+            margin-bottom: 10px;
+            justify-content: space-evenly;
+        }
+        .correct{
+            background-color: rgb(40, 231, 40);
+        }
+        .contain{
+            background-color: rgb(240, 167, 33);
+        }
+        #drawboard {
+            border: 1px solid rgba(0, 0, 0, 0.3); 
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff0;
+            animation: fall 3s infinite;
+        }
+        h4{
+            white-space:normal;
+            max-width: 230px;
+        }
+        button {
+            background-color: #AF40FF;
+            border: 0;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 16px;
+            padding: 5px;
+            transition: background-color 0.5s ease-in, transform 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 40px;
+            position: absolute;
+            bottom: 0;
+            width: 98%;
+        }
+        a{
+            text-decoration: none;
+            color: white;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Wordle</h1>
+        <p>You have 5 Guess to find the random word</p>
+        <a href="index.html">Return Home?</a>
+    </header>
+    <div id="drawboard">
+        <h1>Wordle</h1>
+        <div>
+            <h4 id="clue" style="margin: 0;">
+            <button onclick="showclue()">Show clue</button></h4>
+        </div>
+        <h3 id="message"></h3>
+        <div class="styledinput">
+            <input type="text" maxlength="1" id="wordleans1">
+            <input type="text" maxlength="1" id="wordleans2">
+            <input type="text" maxlength="1" id="wordleans3">
+            <input type="text" maxlength="1" id="wordleans4">
+            <input type="text" maxlength="1" id="wordleans5">
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Game Hub. All rights reserved.</p>
+    </footer>
+    <script>
+        let tries = 0;
+        const WORD_URL = "https://random-word-api.herokuapp.com/word?number=1&length=5";
+        let secretword = "";
+        
+        document.addEventListener("keydown",function(event){
+            if(event.key == "Enter"){
+                checkword();
+            }
+        });
+        
+        function autofocus(){
+            const inputs = document.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener("input", function () {
+                    if (inputs[i].value.length === 1) {
+                        const nextField = inputs[i + 1];
+                        if (nextField) {
+                            nextField.focus();
+                        }
+                    }
+                });
+            }
+        }
+        
+        async function fetchword() {
+            const response = await fetch(WORD_URL);
+            const data = await response.json();
+            secretword = data[0].toLowerCase();
+            console.log("The secret word is:", secretword);
+        }
+
+        async function showclue() {
+            let searchword = secretword;
+            console.log("The secret word is:", searchword);
+            const GUESS_URL = `https://api.dictionaryapi.dev/api/v2/entries/en/${searchword}`;
+            const clueresponse = await fetch(GUESS_URL);
+            const cluedata = await clueresponse.json();
+            const clue = cluedata[0]?.meanings[0]?.definitions[0]?.definition || "No clue available";
+            console.log("The Clue is:", clue);
+            let cluetext = document.getElementById('clue');
+            cluetext.innerHTML = clue;
+        }
+
+        function checkword(){
+            let entered1 = document.getElementById('wordleans1');
+            let entered2 = document.getElementById('wordleans2');
+            let entered3 = document.getElementById('wordleans3');
+            let entered4 = document.getElementById('wordleans4');
+            let entered5 = document.getElementById('wordleans5');
+            if (!entered1.value || !entered2.value || !entered3.value || !entered4.value || !entered5.value) {
+                alert("Enter all the words");
+                return;
+            }
+            entered = entered1.value + entered2.value + entered3.value + entered4.value + entered5.value;
+            console.log("Entered word:", entered);
+            console.log("the scond word is : ",secretword[1]);
+            
+            let correctPositions = [];
+            let letterpos = [...secretword];
+            console.log(letterpos)
+            for(i=0;i<5;i++){
+                let currentInput = document.getElementById('wordleans' + (i + 1));
+                if (entered[i] == secretword[i]) {
+                    console.log("Correct place");
+                    currentInput.style.backgroundColor = 'green';
+                    correctPositions.push(i);
+                    letterpos[i] = null;
+                }
+                else if(secretword.includes(entered[i]) && letterpos.includes(entered[i])  ){
+                    console.log("The word is valid");
+                    currentInput.style.backgroundColor = 'orange';
+                }
+            }
+
+            const message = document.getElementById('message');
+            if(entered == secretword){
+                message.innerHTML = "The Ans is correct!!!<br><a href='wordle.html'>Start Again</a>";
+                throwconfette();
+            }else{
+                entered1.removeAttribute('id');
+                entered2.removeAttribute('id');
+                entered3.removeAttribute('id');
+                entered4.removeAttribute('id');
+                entered5.removeAttribute('id');
+                tries+=1;
+                if(tries>=5){
+                    message.innerHTML = `Game over!!!<br>The answer was : ${secretword}<br><a href='wordle.html'>Start Again</a>`;
+                }else{
+                    drawnewboxes()
+                }
+                console.log(tries)
+            }
+        }
+
+        function drawnewboxes(){
+            let board = document.getElementById('drawboard');
+            cells = document.createElement('div');
+            cells.classList.add('styledinput');
+            for(i=0;i<5;i++){
+                fields = document.createElement('input');
+                fields.id = 'wordleans'+ (i+1);
+                fields.maxLength = '1';
+                fields.style.marginRight = '10px';
+                fields.style.width = '30px';
+                fields.style.textAlign = 'center';
+                cells.appendChild(fields)
+            }
+            board.appendChild(cells)
+            autofocus()
+            firstfield = document.getElementById('wordleans1');
+            firstfield.focus();
+        }
+        fetchword()
+        autofocus()
+
+
+        function throwconfette(){
+            for(i=0;i<200;i++){
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.top = '-10px';
+                confetti.style.left = Math.random()*window.innerWidth-10 + 'px';
+                confetti.style.animationDelay = Math.random()*5 + 's';
+                const colors = ['#ff0', '#ff6347', '#32cd32', '#1e90ff', '#ff1493'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>

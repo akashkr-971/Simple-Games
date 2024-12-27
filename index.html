@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+            line-height: 1.6;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+        }
+
+        .game-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            box-sizing: border-box;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .game-card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .game-card p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .game-card:hover h2 {
+            color: #AF40FF;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 40px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 28px;
+            }
+
+            .game-list {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .game-card {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 24px;
+            }
+
+            header p {
+                font-size: 16px;
+            }
+
+            .game-card h2 {
+                font-size: 18px;
+            }
+
+            .game-card p {
+                font-size: 12px;
+            }
+        }
+
+
+    </style>    
+</head>
+
+<body>
+    <header>
+        <h1>Game Hub</h1>
+        <p>Welcome to the game collection created by Akash. Click to play!</p>
+    </header>
+
+    <section class="game-list">
+        <div class="game-card" onclick="window.location.href='wordle.html'">
+            <img src="static/Wordle.png" alt="Wordle Game" class="game-image">
+            <h2>Wordle</h2>
+            <p>Guess the word in 6 tries!</p>
+        </div>
+        <div class="game-card" onclick="window.location.href='Tic-Tac-Toe.html'">
+            <img src="static/Tick-Tac-Toe.png" alt="Tic-Tac-Toe Game" class="game-image">
+            <h2>Tick-Tac-Toe Game</h2>
+            <p>Tic-Tac-Toe: Classic 2-player grid game..</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Game Hub. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
