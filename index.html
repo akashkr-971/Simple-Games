@@ -109,6 +109,10 @@
                 width: 80%;
                 max-width: 300px;
             }
+            footer{
+                position: relative;
+                bottom: 0px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -135,8 +139,8 @@
 
 <body>
     <header>
-        <h1>Game Hub</h1>
-        <p>Welcome to the game collection created by Akash. Click to play!</p>
+        <h1>Project Hub</h1>
+        <p>Welcome to the project collection created by Akash. Click to explore!</p>
     </header>
 
     <section class="game-list">
@@ -155,10 +159,15 @@
             <h2>Flappy Bird Game</h2>
             <p>Play without hitting the pipes</p>
         </div>
+        <div class="game-card" onclick="window.location.href='rock-paper-scissor.html'">
+            <img src="static/rockpaperscissor.png" alt="Rock paper scisssor Game" class="game-image">
+            <h2>Rock paper Scissor Game</h2>
+            <p>Select 1 out of 3 and play with computer</p>
+        </div>
     </section>
 
     <footer>
-        <p>&copy; 2024 Game Hub. All rights reserved.</p>
+        <p>&copy; 2024 Project Hub. All rights reserved.</p>
     </footer>
 </body>
 

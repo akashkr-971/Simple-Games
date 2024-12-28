@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissor</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body{
+            height: 98vh;
+        }
+        .card{
+            box-sizing: border-box;
+            width: 190px;
+            height: 250px;
+            border: 1px solid white;
+            box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+            border-radius: 17px;
+            cursor: pointer;
+        }
+        .choices{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+
+        }
+        #drawboard{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 450px;
+            transform: translate(0%,50%);
+            z-index: 1;
+            margin: 0 10% 0 10%;
+        }
+        #drawboard h1{
+            margin: 0px;
+        }
+        #message{
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            flex-direction: column;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: rgba(72, 82, 71, 0.815);
+            color: white;
+            font-size: 20px;
+        }
+        button{
+            height: 40px;
+            width: 130px;
+            font-size: 20px;
+            background-color: aqua;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color: rgba(0, 255, 255, 0.712);
+        }
+        .rock{
+            background: url(static/rock.png);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .paper{
+            background: url(static/paper.png);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .scissor{
+            background: url(static/scissor.png);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .choices button:hover{
+            background-color: rgba(250, 235, 215, 0.527);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Rock Paper Scissors</h1>
+        <p>Select 1 out of 3 and play with computer</p>
+        <a href="index.html">Return Home?</a>
+    </header>
+    <div id="drawboard">
+        <h1>Rock Paper Scissors</h1>
+        <p id="score" style="font-size: 20px;"></p>
+        <div class="choices">
+            <button class="card rock" onclick="checkwinner('rock')"></button>
+            <button class="card paper" onclick="checkwinner('paper')"></button>
+            <button class="card scissor" onclick="checkwinner('scissor')"></button>
+        </div>
+        <div id="message">
+            <p id="urchoice"></p>
+            <p id="computerchoice"></p>
+            <p id="Result"></p>
+            <p><button onclick="closemsg()">Play Again</button></p>
+
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Game Hub. All rights reserved.</p>
+    </footer>
+</body>
+<script>
+    urchoice=document.getElementById('urchoice');
+    computerchoice=document.getElementById('computerchoice');
+    Result=document.getElementById('Result');
+    msg = document.getElementById("message");
+    let scorepoint = 0;
+    let computerscore = 0;
+
+    function checkwinner(plyrchoice){
+        let choices = ['rock','paper','scissor'];
+        let randomnumber =Math.floor(Math.random()*3)
+        let cmpchoice = choices[randomnumber]
+        let playershoice = plyrchoice;
+        score = document.getElementById("score");
+        if(
+            (cmpchoice=='rock' && playershoice=="paper") || 
+            (cmpchoice == 'paper' && playershoice == "scissor") ||
+            (cmpchoice == 'scissor' && playershoice == "rock")
+        ){
+            urchoice.innerText = `You Choose : ${playershoice}`;
+            computerchoice.innerText = `Computer Choose : ${cmpchoice}`;
+            Result.innerText = "Player won";
+            msg.style.display="flex";
+            scorepoint++;
+            score.innerHTML = `Player Score : ${scorepoint}     |      Computer Score : ${computerscore}`
+            console.log('Player won')
+            console.log(scorepoint);
+        }else if(
+            (cmpchoice == 'paper' && playershoice == "rock") ||
+            (cmpchoice == 'scissor' && playershoice == "paper") ||
+            (cmpchoice == 'rock' && playershoice == "scissor")
+        ){
+            urchoice.innerText = `You Choose : ${playershoice}`;
+            computerchoice.innerText = `Computer Choose : ${cmpchoice}`;
+            Result.innerText = "Computer won";
+            msg.style.display = "flex";
+            computerscore++;
+            score.innerHTML = `Player Score : ${scorepoint}     |     Computer Score : ${computerscore}`
+            console.log("Computer Won")
+        }
+    }
+    function closemsg(){
+        msg.style.display = "none";
+    }
+</script>
+</html>
