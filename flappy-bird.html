@@ -71,7 +71,41 @@
         h3{
             margin: 0;
         }
+        .popup{
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: absolute;
+            background-color: rgba(180, 168, 168, 0.514);
+            padding: 30px;
+            border-radius: 20px;
+            transform: translate(0%,20%);
+        }
+        .popup p{
+            margin: 5px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .button {
+            color: rgb(148, 7, 7);
+            font-size: 16px;
+            background-color: lightgreen;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 0.7rem;
+            padding-bottom: 0.7rem;
+            cursor: pointer;
+            text-align: center;
+            align-items: center;
+            border: none;
+        }
 
+        .button:hover {
+            background-color: #8ad857;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +120,11 @@
             <h3 id="message">Score : 0</h3>
             <div class="bird" id="bird"></div>
         </div>
+    </div>
+    <div class="popup" id="popup">
+    <p>Game Over!!!</p> 
+    <p id="scoreboard"></p>
+    <p><a href="flappy-bird.html"><button class="button" onclick="restart()"> Start Over!!</button></a></p>
     </div>
     <footer>
         <p>&copy; 2024 Game Hub. All rights reserved.</p>
@@ -161,54 +200,83 @@
             scoreElement.innerText = 'Score: ' + score;
             iscounted=true;
         }
+        scoreboard = document.getElementById('scoreboard');
+        scoreboard.innerText = `Your score is : ${score}`;
     }
 
     function checkcollision() {
-        let firstPipeUp = document.getElementsByClassName('pipeup')[0];
-        let firstPipeDown = document.getElementsByClassName('pipedown')[0];
-        // Bird's position and size
-        let birdLeft = bird.offsetLeft;
-        let birdRight = bird.offsetLeft + bird.offsetWidth;
-        let birdTop = parseInt(bird.style.top);
-        let birdBottom = birdTop + bird.offsetHeight;
-        // Pipe's position and size
-        let pipeUpLeft = parseInt(firstPipeUp.style.left);
-        let pipeUpRight = pipeUpLeft + firstPipeUp.offsetWidth;
-        let pipeUpBottom = parseInt(firstPipeUp.style.height);  // Height of the top pipe
-        let pipeDownLeft = parseInt(firstPipeDown.style.left);
-        let pipeDownRight = pipeDownLeft + firstPipeDown.offsetWidth;
-        let pipeDownTop = parseInt(firstPipeDown.style.top);  // Top of the bottom pipe
-        // Check for collision with the upper pipe (top pipe)
-        if (birdRight > pipeUpLeft && birdLeft < pipeUpRight) {
-            if (birdTop < pipeUpBottom) {
-                console.log("Game Over - Bird hit upper pipe");
+            let firstPipeUp = document.getElementsByClassName('pipeup')[0];
+            let firstPipeDown = document.getElementsByClassName('pipedown')[0];
+            let birdLeft = bird.offsetLeft;
+            let birdRight = bird.offsetLeft + bird.offsetWidth;
+            let birdTop = parseInt(bird.style.top);
+            let birdBottom = birdTop + bird.offsetHeight;
+            let pipeUpLeft = parseInt(firstPipeUp.offsetLeft);
+            let pipeUpBottom = parseInt(firstPipeUp.style.height) - 10;  // Height of the top pipe
+            let valid_area = pipeUpBottom + 110;
+
+            //checking collision
+            if (birdRight >= pipeUpLeft && birdLeft <= pipeUpLeft && (birdTop < pipeUpBottom || birdBottom > valid_area)) {
+                console.log("Game over");
                 gameover = true;
             }
+
         }
-        // Check for collision with the lower pipe (bottom pipe)
-        if (birdRight > pipeDownLeft && birdLeft < pipeDownRight) {
-            if (birdBottom > pipeDownTop) {  // Bird's bottom should be greater than the top of the bottom pipe
-                console.log("Game Over - Bird hit lower pipe");
-                gameover = true;
-            }
-        }
-    }
+    
+
 
     function gameLoop() {
         fall();
         movePipes();
     }
 
-    // gameover=true; 
-    if(!gameover){
-        setInterval(gameLoop, 100);
-        setInterval(createPipe, 5000);
-        setTimeout(()=>{
-            setInterval(checkForScoring, 1000);
-        },5000);
+    let gameloopinterval, createpipeinterval, checkscoringinterval, checkcollisioninterval;
+    
+    function gamerun(){
+        clearintervals();
+        gameloopinterval = setInterval(() => {
+            if (!gameover) {
+                gameLoop();
+            } else {
+                endGame();
+            }
+        }, 100);
+
+        createpipeinterval = setInterval(() => {
+            if (!gameover) {
+                createPipe();
+            }
+        }, 5000);
+
         setTimeout(() => {
-            setInterval(checkcollision, 1000);
+            checkscoringinterval = setInterval(() => {
+                if (!gameover) {
+                    checkForScoring();
+                }
+            }, 1000);
+
+            checkcollisioninterval = setInterval(() => {
+                if (!gameover) {
+                    checkcollision();
+                }
+            }, 100);
         }, 5000);
     }
+
+    function clearintervals(){
+        clearInterval(gameloopinterval);
+        clearInterval(createpipeinterval);
+        clearInterval(checkscoringinterval);
+        clearInterval(checkcollisioninterval);
+    }
+
+    function endGame() {
+        clearintervals();
+        popup = document.getElementById('popup');
+        popup.style.display = "flex";
+
+    }
+    gamerun();
+
 </script>
 </html>
